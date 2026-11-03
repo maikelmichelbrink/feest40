@@ -450,8 +450,13 @@ body.locked{overflow:hidden}
 }
 
 @media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
+  /* rustiger, maar de teaser speelt wel af */
+  :not(.teaser):not(.teaser *),:not(.teaser *)::before,:not(.teaser *)::after{animation:none!important;transition:none!important}
   #motes,.spotlight,.smoke-layer,.env-steam{display:none}
+  .t-stage,.t-stage.t-shake,.t-grain{animation:none!important}
+  .t-strobe{display:none}
+  .t-flash.go{animation:flash 1.2s ease-out;opacity:0}
+  .teaser.out{animation:tOut .9s ease forwards!important}
 }
 </style>
 </head>
@@ -906,7 +911,7 @@ body.locked{overflow:hidden}
 
 <script>
 /* ===== Plak hier de URL van je Google Apps Script web-app ===== */
-var SCRIPT_URL = 'PLAK_HIER_JE_WEB_APP_URL';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznxafSrQb3nKYOdfEZQ_QuS2rIeqwQhhCU6lH-Mh9slqgvTOIsKOsjYGsMFwaINUM_/exec';
 
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1066,7 +1071,7 @@ var SCRIPT_URL = 'PLAK_HIER_JE_WEB_APP_URL';
     setTimeout(function () { pop(0); puffs(); }, 700);
     setTimeout(function () {
       overlay.classList.add('gone');
-      if (reduce) reveal(); else startTeaser();
+      startTeaser();
     }, reduce ? 50 : 1050);
   }
 
@@ -1253,11 +1258,11 @@ var SCRIPT_URL = 'PLAK_HIER_JE_WEB_APP_URL';
       if (beatLevel >= 2) { hat(t + BEAT / 2000, .12); }
       if (beatLevel >= 3) { hat(t + BEAT / 4000, .07); hat(t + 3 * BEAT / 4000, .07); bass(t + BEAT / 2000, beatN % 4 < 2 ? 55 : 49, .2, .22); }
     }
-    if (beatLevel >= 2 && strobe) {
+    if (beatLevel >= 2 && strobe && !reduce) {
       strobe.style.background = 'radial-gradient(circle at ' + (20 + Math.random() * 60) + '% ' + (20 + Math.random() * 50) + '%, ' + strobeCols[beatN % strobeCols.length] + ', transparent 65%)';
       strobe.classList.remove('hit'); void strobe.offsetWidth; strobe.classList.add('hit');
     }
-    if (beatLevel >= 3 && beatN % 2 === 0) {
+    if (beatLevel >= 3 && beatN % 2 === 0 && !reduce) {
       tStage.classList.remove('t-shake'); void tStage.offsetWidth; tStage.classList.add('t-shake');
     }
   }
